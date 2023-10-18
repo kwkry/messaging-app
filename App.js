@@ -13,8 +13,21 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  content:{
+    flex:1,
+    backgroundColor:'white',
+  },
+  inputMethodEditor:{
+    flex:1,
+    backgroundColor:'white',
+  },
+  toolbar:{
+    backgroundColor:'white',
+    borderTopWidth:1,
+    borderTopColor:'rgba(0,0,0,0.04)',
   },
 });
