@@ -3,16 +3,34 @@ import {
   StyleSheet,
   Text,
   View,
-  NetInfo,
   StatusBar,
 } from "react-native";
 import Constants from "expo-constants";
 import React from "react";
+import NetInfo from "@react-native-community/netinfo";
 
 export default class Status extends React.Component {
   state = {
     info: 'none',
   };
+
+  subscriptions = null;
+
+  componentDidMount() {
+    this.subscriptions = NetInfo.addEventListener((state) => {
+      this.setState({ info: state.type });
+    });
+
+    NetInfo.fetch().then((state) => {
+      this.setState({ info: state.type });
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.subscriptions) {
+      this.subscriptions();
+    }
+  }
 
   render() {
     const { info } = this.state;
