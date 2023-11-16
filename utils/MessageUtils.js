@@ -10,3 +10,34 @@ export const MessageShape = PropTypes.shape({
     longitude: PropTypes.number.isRequired,
   }),
 });
+
+let messageid = 0;
+
+function getNextid() {
+  messageid += 1;
+  return messageid;
+}
+
+export function createTextMessage(text) {
+  return {
+    type: "text",
+    id: getNextid(),
+    text,
+  };
+}
+
+export function createimageMessage(uri) {
+  return {
+    type: "image",
+    id: getNextid(),
+    uri,
+  };
+}
+
+export function createLocationMessage(coordinate) {
+  return {
+    type: "location",
+    id: getNextid(),
+    coordinate,
+  };
+}
