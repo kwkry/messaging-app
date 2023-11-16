@@ -1,70 +1,84 @@
+import React, { Component } from "react";
+import Constants from "expo-constants";
 import {
-  Platform,
+  StatusBar,
   StyleSheet,
   Text,
   View,
-  StatusBar,
+  Platform,
+  Animated,
 } from "react-native";
-import Constants from "expo-constants";
-import React from "react";
 import NetInfo from "@react-native-community/netinfo";
 
-export default class Status extends React.Component {
-  state = {
-    info: 'none',
-  };
+const statusHeight = Platform.OS === "ios" ? Constants.statusBarHeight : 0;
 
-  subscriptions = null;
+export default class Status extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isConnected: false,
+      fadeAnim: new Animated.Value(0),
+      statusBarColor: "red", // Initial status bar color
+    };
+  }
 
   componentDidMount() {
-    this.subscriptions = NetInfo.addEventListener((state) => {
-      this.setState({ info: state.type });
-    });
-
-    NetInfo.fetch().then((state) => {
-      this.setState({ info: state.type });
-    });
+    NetInfo.addEventListener(this.handleConnectivityChange);
   }
 
   componentWillUnmount() {
-    if (this.subscriptions) {
-      this.subscriptions();
-    }
+    NetInfo.removeEventListener(this.handleConnectivityChange);
   }
 
+  handleConnectivityChange = (state) => {
+    this.setState({
+      isConnected: state.isConnected,
+    });
+
+    // Animate the status bar color change
+    const newStatusBarColor = state.isConnected ? "green" : "red";
+    Animated.timing(this.state.fadeAnim, {
+      toValue: 1,
+      duration: 10000, // Adjust the duration as needed
+      useNativeDriver: false, // Set to false for StatusBar animation
+    }).start();
+
+    this.setState({
+      statusBarColor: newStatusBarColor,
+    });
+  };
+
   render() {
-    const { info } = this.state;
-    const isConnected = info !== "none";
-    const backgroundColor = isConnected ? "white" : "red";
+    const { isConnected, fadeAnim, statusBarColor } = this.state;
+
+    if (Platform.OS === "ios") {
+      return (
+        <View
+          style={[styles.status, { backgroundColor: statusBarColor }]}
+        ></View>
+      );
+    }
+
     const statusBar = (
       <StatusBar
-        backgroundColor={backgroundColor}
+        backgroundColor={statusBarColor}
         barStyle={isConnected ? "dark-content" : "light-content"}
-        animated={false}
       />
     );
     const messageContainer = (
-      <View style={styles.messageContainer} pointerEvents={"none"}>
+      <Animated.View style={[styles.messageContainer, { opacity: fadeAnim }]}>
         {statusBar}
         {!isConnected && (
           <View style={styles.bubble}>
             <Text style={styles.text}>No network connection</Text>
           </View>
         )}
-      </View>
+      </Animated.View>
     );
-    if (Platform.OS === "ios") {
-      return (
-        <View style={[styles.status, { backgroundColor }]}>
-          {messageContainer}
-        </View>
-      );
-    }
+
     return messageContainer;
   }
 }
-
-const statusHeight = Constants.statusBarHeight;
 
 const styles = StyleSheet.create({
   status: {
@@ -81,9 +95,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bubble: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     paddingVertical: 10,
     borderRadius: 20,
+    paddingBottom: 10,
     backgroundColor: "red",
   },
   text: {
