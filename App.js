@@ -1,4 +1,12 @@
-import { StyleSheet, View, Alert, BackHandler } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableHighlight,
+  Alert,
+  BackHandler,
+  ImageBackground,
+} from "react-native";
 import Status from "./components/StatusBar";
 import MessageList from "./components/Messagelist";
 import {
@@ -57,7 +65,7 @@ export default class App extends React.Component {
 
   renderMessageList = () => {
     return (
-      <View style={styles.content}>
+      <View>
         <MessageList
           messages={this.state.messages}
           onPressMessage={this.handlePressMessage}
@@ -109,13 +117,20 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Status />
-        {this.renderMessageList()}
-        {/* {this.renderToolbar()}
+      <ImageBackground
+        source={{
+          uri: "https://w0.peakpx.com/wallpaper/744/364/HD-wallpaper-whatsapp-message-beautiful-blue-colour-message-phone-whatsapp-messenger-whatsapp-thumbnail.jpg",
+        }}
+        style={styles.container}
+      >
+        <View style={styles.innerContainer}>
+          <Status />
+          {this.renderMessageList()}
+          {/* {this.renderToolbar()}
         {this.renderInputMethodEditor()} */}
-        {this.renderFullscreenImage()}
-      </View>
+          {this.renderFullscreenImage()}
+        </View>
+      </ImageBackground>
     );
   }
 }
@@ -123,9 +138,12 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+  },
+  innerContainer: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "transparent",
   },
   content: {
     flex: 1,
@@ -136,8 +154,26 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   toolbar: {
-    backgroundColor: "white",
+    flex: 1,
     borderTopWidth: 1,
     borderTopColor: "rgba(0,0,0,0.04)",
+    backgroundColor: "white",
+  },
+  fullscreenOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "black",
+    zIndex: 1000, // Ensure it covers other components
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  fullscreenImage: {
+    flex: 1,
+    resizeMode: "contain",
+    width: "100%",
+    height: "100%",
   },
 });
