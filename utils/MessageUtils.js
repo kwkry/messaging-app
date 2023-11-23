@@ -11,11 +11,11 @@ export const MessageShape = PropTypes.shape({
   }),
 });
 
-let messageid = 0;
+let messageId = 0;
 
 function getNextid() {
-  messageid += 1;
-  return messageid;
+  messageId += 1;
+  return messageId;
 }
 
 export function createTextMessage(text) {
@@ -26,7 +26,7 @@ export function createTextMessage(text) {
   };
 }
 
-export function createimageMessage(uri) {
+export function createImageMessage(uri) {
   return {
     type: "image",
     id: getNextid(),

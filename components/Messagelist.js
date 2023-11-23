@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { MapView } from "expo";
+import MapView, { Marker } from "react-native-maps";
 import { MessageShape } from "../utils/MessageUtils";
 
 const keyExtractor = (item) => item.id.toString();
@@ -22,10 +22,8 @@ export default class MessageList extends React.Component {
   static defaultProps = {
     onPressMessage: () => {},
   };
-  // ...
 
-  // ...
-  renderMessageitem = ({ item }) => {
+  renderMessageItem = ({ item }) => {
     const { onPressMessage } = this.props;
     return (
       <View key={item.id} style={styles.messageRow}>
@@ -56,7 +54,7 @@ export default class MessageList extends React.Component {
               longitudeDelta: 0.04,
             }}
           >
-            <MapView.Marker coordinate={coordinate} />
+            <Marker coordinate={coordinate} />
           </MapView>
         );
       default:
@@ -71,7 +69,7 @@ export default class MessageList extends React.Component {
         style={styles.container}
         inverted
         data={messages}
-        renderitem={this.renderMessageitem}
+        renderItem={this.renderMessageItem}
         keyExtractor={keyExtractor}
         keyboardShouldPersistTaps={"handled"}
       />
@@ -83,5 +81,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: "visible", //Prevents clipping on resize!
+  },
+  messageRow: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginLeft: 100,
+    marginBottom: 10,
+  },
+  messageBubble: {
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 20,
+  },
+  text: {
+    color: "white",
+    fontSize: 16,
+  },
+  image: {
+    width: 120,
+    height: 120,
+    borderRadius: 10,
+  },
+  map: {
+    width: 200,
+    height: 150,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
 });
