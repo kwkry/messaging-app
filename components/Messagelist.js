@@ -37,7 +37,31 @@ export default class MessageList extends React.Component {
   };
 
   renderMessageBody = ({ type, text, uri, coordinate }) => {
-    // ...
+    switch (type) {
+      case "text":
+        return (
+          <View style={styles.messageBubble}>
+            <Text style={styles.text}>{text}</Text>
+          </View>
+        );
+      case "image":
+        return <Image style={styles.image} source={{ uri }} />;
+      case "location":
+        return (
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              ...coordinate,
+              latitudeDelta: 0.08,
+              longitudeDelta: 0.04,
+            }}
+          >
+            <MapView.Marker coordinate={coordinate} />
+          </MapView>
+        );
+      default:
+        return null;
+    }
   };
 
   render() {
