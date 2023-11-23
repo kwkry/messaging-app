@@ -1,6 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { FlatList, StyleSheet } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { MapView } from "expo";
 import { MessageShape } from "../utils/MessageUtils";
 
 const keyExtractor = (item) => item.id.toString();
@@ -16,9 +24,22 @@ export default class MessageList extends React.Component {
   };
   // ...
 
+  // ...
   renderMessageitem = ({ item }) => {
+    const { onPressMessage } = this.props;
+    return (
+      <View key={item.id} style={styles.messageRow}>
+        <TouchableOpacity onPress={() => onPressMessage(item)}>
+          {this.renderMessageBody(item)}
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  renderMessageBody = ({ type, text, uri, coordinate }) => {
     // ...
   };
+
   render() {
     const { messages } = this.props;
     return (
