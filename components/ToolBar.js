@@ -8,8 +8,17 @@ import {
 import PropTypes from "prop-types";
 import React from "react";
 
-export default class Toolbar extends React.Component {
+const ToolbarButton = ({ title, onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <Text style={styles.button}>{title}</Text>
+  </TouchableOpacity>
+);
+ToolbarButton.propTypes = {
+  title: PropTypes.string.isRequired,
+  onPress: PropTypes.func.isRequired,
+};
 
+export default class Toolbar extends React.Component {
   static propTypes = {
     isFocused: PropTypes.bool.isRequired,
     onChangeFocus: PropTypes.func,
@@ -26,7 +35,14 @@ export default class Toolbar extends React.Component {
   };
 
   render() {
-    return <View style={styles.toolbar}> {/* ... */}</View>;
+    const { onPressCamera, onPressLocation } = this.props;
+    return (
+      <View style={styles.toolbar}>
+        {/* Use emojis for icons instead! */}
+        <ToolbarButton title={"C"} onPress={onPressCamera} />{" "}
+        <ToolbarButton title={"L"} onPress={onPressLocation} /> {/* ... */}
+      </View>
+    );
   }
 }
 
@@ -39,5 +55,12 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     backgroundColor: "white",
   },
+  button: {
+    top: -2,
+    marginRight: 12,
+    fontSize: 20,
+    color: "grey",
+  },
+
   // ...
 });
