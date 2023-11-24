@@ -8,7 +8,7 @@ import {
   ImageBackground,
 } from "react-native";
 import Status from "./components/StatusBar";
-import MessageList from "./components/Messagelist";
+import MessageList from "./components/MessageList";
 import {
   createImageMessage,
   createLocationMessage,
