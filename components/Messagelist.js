@@ -72,6 +72,7 @@ export default class MessageList extends React.Component {
         renderItem={this.renderMessageItem}
         keyExtractor={keyExtractor}
         keyboardShouldPersistTaps={"handled"}
+        contentContainerStyle={styles.contentContainer}
       />
     );
   }
@@ -108,5 +109,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#ddd",
+  },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: "flex-end",
+    paddingBottom: 10,
   },
 });

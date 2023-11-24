@@ -51,27 +51,55 @@ export default class Toolbar extends React.Component {
     this.setState({ text: "" });
   };
 
+  setInputRef = (ref) => {
+    this.input = ref;
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isFocused !== this.props.isFocused) {
+      if (nextProps.isFocused) {
+        this.input.focus();
+      } else {
+        this.input.blur();
+      }
+    }
+  }
+
+  handleFocus = () => {
+    const { onChangeFocus } = this.props;
+    onChangeFocus(true);
+  };
+
+  handleBlur = () => {
+    const { onChangeFocus } = this.props;
+    onChangeFocus(false);
+  };
+
+  // ...
   render() {
     const { onPressCamera, onPressLocation } = this.props;
-    const { text } = this.state;
-    return (
-      <View style={styles.toolbar}>
-        <ToolbarButton title={"📷"} onPress={onPressCamera} />
-        <ToolbarButton title={"📍"} onPress={onPressLocation} />
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            underlineColorAndroid={"transparent"}
-            placeholder={"Type something!"}
-            blurOnSubmit={false}
-            value={text}
-            onChangeText={this.handleChangeText}
-            onSubmitEditing={this.handleSubmitEditing}
-            // ...
-          />
-        </View>
+    // Grab this from state! const { text } = this.state; return (
+    <View style={styles.toolbar}>
+      {/* Use emojis for icons instead! */}
+      <ToolbarButton title={"📷"} onPress={onPressCamera} />
+      <ToolbarButton title={"📍"} onPress={onPressLocation} />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          underlineColorAndroid={"transparent"}
+          placeholder={"Type something!"}
+          blurOnSubmit={false}
+          value={text}
+          onChangeText={this.handleChangeText}
+          onSubmitEditing={this.handleSubmitEditing}
+          // Additional props!
+
+          ref={this.setInputRef}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+        />{" "}
       </View>
-    );
+    </View>;
   }
 }
 

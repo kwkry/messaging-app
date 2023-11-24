@@ -19,12 +19,14 @@ import React from "react";
 export default class App extends React.Component {
   state = {
     messages: [
-      createImageMessage("https://unsplash.it/300/300"),
-      createTextMessage("World"),
+      createImageMessage(
+        "https://st3.depositphotos.com/1064024/14272/i/450/depositphotos_142722813-stock-photo-heart-love-tree.jpg"
+      ),
+      createTextMessage("I love you"),
       createTextMessage("Hello"),
       createLocationMessage({
-        latitude: 37.78825,
-        longitude: -122.4324,
+        latitude: 14.608596,
+        longitude: 121.080186,
       }),
     ],
     fullscreenImageId: null,
