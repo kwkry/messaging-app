@@ -39,6 +39,10 @@ export default class Toolbar extends React.Component {
     text: "",
   };
 
+  setInputRef = (ref) => {
+    this.input = ref;
+  };
+
   handleChangeText = (text) => {
     this.setState({ text });
   };
@@ -51,20 +55,6 @@ export default class Toolbar extends React.Component {
     this.setState({ text: "" });
   };
 
-  setInputRef = (ref) => {
-    this.input = ref;
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.isFocused !== this.props.isFocused) {
-      if (nextProps.isFocused) {
-        this.input.focus();
-      } else {
-        this.input.blur();
-      }
-    }
-  }
-
   handleFocus = () => {
     const { onChangeFocus } = this.props;
     onChangeFocus(true);
@@ -75,31 +65,45 @@ export default class Toolbar extends React.Component {
     onChangeFocus(false);
   };
 
-  // ...
+  componentDidUpdate(prevProps) {
+    if (prevProps.isFocused !== this.props.isFocused) {
+      if (this.props.isFocused) {
+        this.inputRef.focus();
+      } else {
+        this.inputRef.blur();
+      }
+    }
+  }
+
   render() {
     const { onPressCamera, onPressLocation } = this.props;
-    // Grab this from state! const { text } = this.state; return (
-    <View style={styles.toolbar}>
-      {/* Use emojis for icons instead! */}
-      <ToolbarButton title={"📷"} onPress={onPressCamera} />
-      <ToolbarButton title={"📍"} onPress={onPressLocation} />
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid={"transparent"}
-          placeholder={"Type something!"}
-          blurOnSubmit={false}
-          value={text}
-          onChangeText={this.handleChangeText}
-          onSubmitEditing={this.handleSubmitEditing}
-          // Additional props!
+    // Grab this from state!
+    const { text } = this.state;
+    return (
+      <View style={styles.toolbar}>
+        {/* Use emojis for icons instead! */}
+        <ToolbarButton title={"📷"} onPress={onPressCamera} />
+        <ToolbarButton title={"📍"} onPress={onPressLocation} />
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            underlineColorAndroid={"transparent"}
+            placeholder={"Type something!"}
+            blurOnSubmit={false}
+            value={text}
+            onChangeText={this.handleChangeText}
+            onSubmitEditing={this.handleSubmitEditing}
+            // Additional props!
 
-          ref={this.setInputRef}
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
-        />{" "}
+            ref={(ref) => {
+              this.inputRef = ref;
+            }}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
+          />
+        </View>
       </View>
-    </View>;
+    );
   }
 }
 
@@ -111,6 +115,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingLeft: 16,
     backgroundColor: "white",
+    borderTopColor: "rgba(0,0,0,0.04)",
   },
   button: {
     top: -2,
@@ -128,5 +133,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: "rgba(0,0,0,0.02)",
   },
-  input: { flex: 1, fontSize: 18 },
+  input: {
+    flex: 1,
+    fontSize: 18,
+  },
 });

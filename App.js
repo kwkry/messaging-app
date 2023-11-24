@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -14,7 +15,7 @@ import {
   createLocationMessage,
   createTextMessage,
 } from "./utils/MessageUtils";
-import React from "react";
+import Toolbar from "./components/ToolBar";
 
 export default class App extends React.Component {
   state = {
@@ -30,6 +31,7 @@ export default class App extends React.Component {
       }),
     ],
     fullscreenImageId: null,
+    isInputFocused: false,
   };
 
   dismissFullscreenImage = () => {
@@ -65,14 +67,37 @@ export default class App extends React.Component {
     }
   };
 
+  handleDeleteMessage = (id) => {
+    this.setState((state) => ({
+      messages: state.messages.filter((message) => message.id !== id),
+    }));
+  };
+
+  handlePressToolbarCamera = () => {
+    // ...
+  };
+
+  handlePressToolbarLocation = () => {
+    // ...
+  };
+
+  handleChangeFocus = (isFocused) => {
+    this.setState({ isInputFocused: isFocused });
+  };
+
+  handleSubmit = (text) => {
+    const { messages } = this.state;
+    this.setState({
+      messages: [createTextMessage(text), ...messages],
+    });
+  };
+
   renderMessageList = () => {
     return (
-      <View>
-        <MessageList
-          messages={this.state.messages}
-          onPressMessage={this.handlePressMessage}
-        />
-      </View>
+      <MessageList
+        messages={this.state.messages}
+        onPressMessage={this.handlePressMessage}
+      />
     );
   };
 
@@ -84,6 +109,7 @@ export default class App extends React.Component {
     if (!image) return null;
 
     const { uri } = image;
+
     return (
       <TouchableHighlight
         style={styles.fullscreenOverlay}
@@ -99,11 +125,26 @@ export default class App extends React.Component {
     );
   };
 
+  renderToolbar = () => {
+    const { isInputFocused } = this.state;
+
+    return (
+      <Toolbar
+        isFocused={isInputFocused}
+        onSubmit={this.handleSubmit}
+        onChangeFocus={this.handleChangeFocus}
+        onPressCamera={this.handlePressToolbarCamera}
+        onPressLocation={this.handlePressToolbarLocation}
+      />
+    );
+  };
+
   componentDidMount() {
     this.subscription = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
         const { fullscreenImageId } = this.state;
+        
         if (fullscreenImageId) {
           this.dismissFullscreenImage();
           return true;
@@ -128,9 +169,9 @@ export default class App extends React.Component {
         <View style={styles.innerContainer}>
           <Status />
           {this.renderMessageList()}
-          {/* {this.renderToolbar()}
-        {this.renderInputMethodEditor()} */}
           {this.renderFullscreenImage()}
+          {this.renderToolbar()}
+          {/* {this.renderInputMethodEditor()} */}
         </View>
       </ImageBackground>
     );
@@ -153,12 +194,6 @@ const styles = StyleSheet.create({
   },
   inputMethodEditor: {
     flex: 1,
-    backgroundColor: "white",
-  },
-  toolbar: {
-    flex: 1,
-    borderTopWidth: 1,
-    borderTopColor: "rgba(0,0,0,0.04)",
     backgroundColor: "white",
   },
   fullscreenOverlay: {
