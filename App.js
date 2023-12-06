@@ -8,6 +8,8 @@ import {
   BackHandler,
   ImageBackground,
 } from "react-native";
+import * as Location from "expo-location";
+
 import Status from "./components/StatusBar";
 import MessageList from "./components/MessageList";
 import {
@@ -26,8 +28,8 @@ export default class App extends React.Component {
       createTextMessage("I love you"),
       createTextMessage("Hello"),
       createLocationMessage({
-        latitude: 14.608596,
-        longitude: 121.080186,
+        latitude: 14.626563646690661,
+        longitude: 121.06247853455515,
       }),
     ],
     fullscreenImageId: null,
@@ -79,6 +81,7 @@ export default class App extends React.Component {
 
   handlePressToolbarLocation = () => {
     const { messages } = this.state;
+    Location.installWebGeolocationPolyfill();
     navigator.geolocation.getCurrentPosition((position) => {
       const {
         coords: { latitude, longitude },
