@@ -78,7 +78,21 @@ export default class App extends React.Component {
   };
 
   handlePressToolbarLocation = () => {
-    // ...
+    const { messages } = this.state;
+    navigator.geolocation.getCurrentPosition((position) => {
+      const {
+        coords: { latitude, longitude },
+      } = position;
+      this.setState({
+        messages: [
+          createLocationMessage({
+            latitude,
+            longitude,
+          }),
+          ...messages,
+        ],
+      });
+    });
   };
 
   handleChangeFocus = (isFocused) => {
@@ -144,7 +158,7 @@ export default class App extends React.Component {
       "hardwareBackPress",
       () => {
         const { fullscreenImageId } = this.state;
-        
+
         if (fullscreenImageId) {
           this.dismissFullscreenImage();
           return true;
